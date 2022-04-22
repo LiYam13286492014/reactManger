@@ -46,7 +46,7 @@ export default function RoleList() {
             
             setDataSource([...list])
 
-            // axios.delete(`http://localhost:3001/roles/${item.id}`)
+            axios.delete(`http://localhost:3001/roles/${item.id}`)
         
         
     }
@@ -86,9 +86,9 @@ export default function RoleList() {
     setIsModalVisible(false);
   };
     const onCheck = (checkKeys)=>{
-        console.log(checkKeys);
-        setCurrentRights(checkKeys)
-        console.log(currentRights);
+        console.log(checkKeys.checked);
+        setCurrentRights(checkKeys.checked)
+       
     }
 
     const columns = [
@@ -116,7 +116,9 @@ export default function RoleList() {
                     <Modal title="权限分配" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <Tree
                         checkable
+                        selectable
                         checkedKeys={currentRights}
+                        checkStrictly={true}
                         onCheck={onCheck}
                         treeData={rightList}
                     />
@@ -133,7 +135,7 @@ export default function RoleList() {
     pagination={
         {
         pageSize:5
-    } }/>
+    } } rowKey={item=>item.id}/>
     </div>
   )
 }

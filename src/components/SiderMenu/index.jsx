@@ -3,6 +3,9 @@ import {Layout, Menu}  from 'antd'
 import {useNavigate,useLocation} from  'react-router-dom'
 import axios from 'axios';
 import { useEffect,useState } from 'react';
+import { connect } from 'react-redux';
+import PubSub from 'pubsub-js';
+
 
 
 
@@ -54,7 +57,7 @@ const { SubMenu } = Menu
 //   }
 // ]
 
-export default function SiderMenu() {
+ function SiderMenu(props) {
   useEffect(()=>{
     axios.get('http://localhost:3001/cc?_embed=children').then(res =>{
       console.log(res.data);
@@ -66,6 +69,16 @@ export default function SiderMenu() {
     })
   },[])
 
+  // useEffect(()=>{
+  //   PubSub.subscribe('aa',(_,data)=>{
+  //     console.log(data);
+      
+  //       setIsCollapsed(data)
+  //     console.log(isCollapsed);
+      
+  //   },)
+  // },[])
+  const[isCollapsed,setIsCollapsed] = useState(true)
   const[menu,setMenu] = useState([])
   
   const navigate = useNavigate()
@@ -91,7 +104,7 @@ export default function SiderMenu() {
     })
   }
   return (
-    <Sider trigger={null} collapsible  className='SiderMenu'>
+    <Sider trigger={null} collapsible collapsed={props.isCollapsed}  className='SiderMenu'>
           <div style={{height:"100%",display:"flex","flexDirection":"column"}}>
           <div style={{color:"white ",textAlign:'center',fontSize:'20px'}} className="logo" children='内部管理系统' />
           <div style={{flex:1,"overflow":"auto"}}>
@@ -128,7 +141,11 @@ export default function SiderMenu() {
         </Sider>
   )
 }
+const mapStateToProps =(state)=>{ 
+  return state.HeadReducer
+}
 
+export default connect(mapStateToProps)(SiderMenu)
 
 
 

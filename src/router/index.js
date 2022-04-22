@@ -6,6 +6,8 @@ import Login from '../views/login';
 
 
 import { Navigate } from 'react-router-dom';
+import News from '../views/guestView/News';
+import Detail from '../views/guestView/Detail';
 
 export default function IndexRouter() {
 
@@ -14,6 +16,8 @@ export default function IndexRouter() {
    
     <Routes>
       <Route path='/login' element={<Login/>} ></Route>
+      <Route path='/news' element={<News/>} ></Route>
+      <Route path='/detail/:id' element={<Detail/>} ></Route>
       {/* <Route path='/' element={<Box/>} ></Route> */}
       <Route path='/*' element={
          localStorage.getItem("tt")?

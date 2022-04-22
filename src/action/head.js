@@ -1,0 +1,1 @@
+export const HeadAction  =()=>({type:'chang_it'})

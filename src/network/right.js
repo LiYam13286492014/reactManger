@@ -5,3 +5,9 @@ export function getRight(){
         url:'/cc?_embed=children'
     })
 }
+
+export function getNews(){
+    return request({
+        url:'/news?_expand=categories&publishState=2'
+    })
+}

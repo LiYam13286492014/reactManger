@@ -1,13 +1,20 @@
 import React from 'react'
-import Box from './Box';
-
+import { Provider } from 'react-redux';
+import{ store,persistor }from './store';
+import { PersistGate } from 'redux-persist/integration/react'
 
 import IndexRouter from './router';
 export default function App() {
   return (
     
+    <Provider store={store}>
+        <PersistGate persistor={persistor}>
+            <IndexRouter/>  
+        </PersistGate>
+        
+    </Provider>
     
-        <IndexRouter/>
+        
         // <Box/>
     
     

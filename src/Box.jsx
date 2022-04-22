@@ -3,36 +3,64 @@
 import 'antd/dist/antd.less'
 import './Box.less';
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import HeadMenu from './components/Head';
 import RightList from './views/rightList/RightList';
 import RoleList from './views/rightList/RoleList';
 import UserList from './views/UserList';
 import NProgress  from 'nprogress';
 import 'nprogress/nprogress.css'
+import { LoadAction } from './action/sider';
 
 
 
-import axios from "axios";
 
 
 
-import { Layout, } from 'antd';
-import { Routes,Route, Navigate } from 'react-router-dom';
+import { Layout,  Spin} from 'antd';
+import { Routes,Route } from 'react-router-dom';
+import axios from './network/http';
+import { connect } from 'react-redux';
+
 
 
 import SiderMenu from './components/SiderMenu';
 import Notfound from './views/Notfound';
 import { useEffect } from 'react';
+import NewsAdd from './views/newsmanage/NewsAdd';
+import NewsWillPush from './views/newsmanage/NewsWillPush';
+import NewsPreview from './views/newsmanage/NewsPreview';
+import NewsUpdate from './views/newsmanage/NewsUpdate';
+import CheckList from './views/checkmanage/CheckList';
+import ChenckPass from './views/checkmanage/ChenckPass';
+import Sunset from './views/publishmanage/Sunset';
+import Publish from './views/publishmanage/Publish';
+import UnPublish from './views/publishmanage/UnPublish';
+import NewsCategory from './views/newsmanage/NewsCategory';
+import Home from './views/Home/Home';
 
 
 
 
 const {   Content } = Layout;
-function Box(){
+function Box(props){
+ 
   const allRouter= {
     '/per-manage/rightlist':<RightList/>,
     '/per-manage/rolelist':<RoleList/>,
-    '/user-manage/list':<UserList/>
+    '/user-manage/list':<UserList/>,
+    '/news-manage/add':<NewsAdd/>,
+    '/news-manage/willpush':<NewsWillPush/>,
+    '/news-manage/preview/:id':<NewsPreview/>,
+    '/news-manage/update/:id':<NewsUpdate/>,
+    '/check-manage/List' : <CheckList/>,
+    '/check-manage/check' : <ChenckPass/>,
+    "/push-manage/out":<Sunset/>,
+    "/push-manage/haven":<Publish/>,
+    "/push-manage/new":<UnPublish/>,
+    "/news-manage/type":<NewsCategory/>,
+    "/home":<Home/>
+
   }
   const[keyList,setKeyList] = useState([])
   
@@ -40,8 +68,8 @@ function Box(){
    
    
    Promise.all([
-     axios.get('http://localhost:3001/cc'),
-     axios.get('http://localhost:3001/children')
+     axios.get('/cc'),
+     axios.get('/children')
    ]).then(res =>{
       console.log(res);
      setKeyList([...res[0].data,...res[1].data])
@@ -52,7 +80,7 @@ function Box(){
  },[])
  const {roles:{rights}} = JSON.parse(localStorage.getItem('tt'))
  const checkPermission =(item)=>{
-   return item.pagepermission &&allRouter[item.key]
+   return (item.pagepermission || item.routerpermission) &&allRouter[item.key]
  }
 
  const checkRouter= (item)=>{
@@ -63,7 +91,7 @@ function Box(){
  NProgress.start()
  useEffect(()=>{NProgress.done()})
   return(
-    
+  < Spin spinning={props.isLoading}>  
     <Layout>
         <SiderMenu/>
         <Layout className="site-layout">
@@ -95,13 +123,15 @@ function Box(){
                   }
                 })
               }
-
               <Route path='*' element={<Notfound/>}></Route>
+              <Route path='/' element={<Navigate to='/home' />}></Route>
             </Routes>
           </Content>
         </Layout>
       </Layout>
+      </Spin>
   )
+ 
 }
 
 
@@ -141,6 +171,13 @@ function Box(){
   
 // }
 
+const mapStateToProps = (state)=>{
+  console.log(state.LoadReducer);
+  
+  return state.LoadReducer
+}
 
 
-export default Box;
+
+
+export default connect(mapStateToProps)(Box);
